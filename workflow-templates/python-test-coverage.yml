@@ -1,5 +1,46 @@
-- name: Pytest coverage comment
-  uses: MishaKav/pytest-coverage-comment@main
-  with:
-    pytest-coverage-path: ./pytest-coverage.txt
-    junitxml-path: ./pytest.xml
+name: Python Application Test Coverage
+
+on:
+  push:
+    branches: [$default-branch]
+  pull_request:
+    branches: [$default-branch]
+
+env:
+  THRESHOLD: 0.9
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+      - name: Checkout repository
+        id: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        id: setup_python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        id: setup_deps
+        run: |
+          pip3 install -upgrade pip
+          pip3 install pytest coverage pytest-cov
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: PyTest Coverage
+        id: pytest
+        run: |
+          pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=app tests/ | tee pytest-coverage.txt
+
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
