@@ -1,0 +1,6 @@
+{
+  "name": "Python Code Quality Workflow",
+  "description": "Checking code quality with pylint and commenting coverage",
+  "iconName": "python-quality",
+  "categories": ["Python"]
+}

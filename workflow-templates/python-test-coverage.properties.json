@@ -1,0 +1,6 @@
+{
+  "name": "Python Test Coverage Workflow",
+  "description": "Checking test coverage with pytest and commenting coverage",
+  "iconName": "python-coverage",
+  "categories": ["Python"]
+}
